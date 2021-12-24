@@ -1,10 +1,9 @@
 const res = require("express/lib/response");
 const userRouter = require("./user");
+const { getHomePage } = require("../controllers/index");
 
 const establish = (app) => {
-  app.get("/", (req, res, next) => {
-    res.send("Home Page");
-  });
+  app.get("/", getHomePage);
   app.use("/user", userRouter);
 };
 

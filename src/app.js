@@ -12,11 +12,8 @@ const port = process.env.PORT || 8080;
 // Logger
 app.use(logger("dev"));
 
-// Router
-require("./helpers/connections_mongodb").connect();
-
 // Connect db
-require("./routes/index").establish(app);
+require("./helpers/connections_mongodb").connect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +25,9 @@ app.use("/assets", express.static(path.join(__dirname, "public")));
 app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+// Router
+require("./routes/index").establish(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
