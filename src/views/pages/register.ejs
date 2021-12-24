@@ -1,1 +1,24 @@
+<%- contentFor('css_body') %>
+<!-- Main -->
 <%- contentFor('body') %>
+<div class="container f">
+  <form class="form" action="/user/register" method="post">
+    <div class="title">Register</div>
+    <div class="form-field">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" />
+    </div>
+    <div class="form-field">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" />
+    </div>
+    <div class="form-field">
+      <label for="password-confirm">Password confirm:</label>
+      <input type="password" id="password-confirm" name="passwordC" />
+    </div>
+    <div class="form-submit">
+      <button type="submit">Register</button>
+    </div>
+  </form>
+</div>
+<%- contentFor('js_body') %>

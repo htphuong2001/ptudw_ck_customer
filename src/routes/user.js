@@ -1,6 +1,7 @@
 const express = require("express");
 
 const {
+  getRegisterPage,
   register,
   login,
   refreshToken,
@@ -8,6 +9,8 @@ const {
 } = require("../controllers/user");
 
 const router = express.Router();
+
+router.get("/register", getRegisterPage);
 
 router.post("/register", register);
 

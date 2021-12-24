@@ -1,3 +1,9 @@
+const getRegisterPage = async (req, res, next) => {
+  res.render("pages/register", {
+    title: "Register",
+  });
+};
+
 const register = async (req, res, next) => {
   res.send("register");
 };
@@ -15,6 +21,7 @@ const accessToken = async (req, res, next) => {
 };
 
 module.exports = {
+  getRegisterPage,
   register,
   login,
   refreshToken,
