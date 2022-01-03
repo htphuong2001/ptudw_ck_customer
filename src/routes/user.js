@@ -3,6 +3,7 @@ const express = require("express");
 const {
   getRegisterPage,
   register,
+  verifyEmail,
   login,
   refreshToken,
   accessToken,
@@ -13,6 +14,8 @@ const router = express.Router();
 router.get("/register", getRegisterPage);
 
 router.post("/register", register);
+
+router.get("/verify-email/:token", verifyEmail);
 
 router.post("/login", login);
 

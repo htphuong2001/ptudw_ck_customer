@@ -38,7 +38,7 @@ const register = async (req, res, next) => {
 
     if (success) {
       const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-        expiresIn: 15 * 60,
+        expiresIn: "15m",
       });
 
       // Saved user
@@ -46,7 +46,7 @@ const register = async (req, res, next) => {
       const savedUser = await newUser.save();
 
       // Send mail verify
-      const link = `${req.get("origin")}/user/verify/${token}`;
+      const link = `${req.get("origin")}/user/verify-email/${token}`;
       await accountVerify(email, link);
 
       setTimeout(async () => {
@@ -66,6 +66,18 @@ const register = async (req, res, next) => {
   }
 };
 
+const verifyEmail = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const { email } = jwt.verify(token, process.env.JWT_SECRET);
+    await User.findOneAndUpdate({ username: email }, { is_lock: false });
+    req.flash("message", "Verify success");
+    res.redirect("/user/register");
+  } catch (error) {
+    next(error);
+  }
+};
+
 const login = async (req, res, next) => {
   res.send("login");
 };
@@ -81,6 +93,7 @@ const accessToken = async (req, res, next) => {
 module.exports = {
   getRegisterPage,
   register,
+  verifyEmail,
   login,
   refreshToken,
   accessToken,
