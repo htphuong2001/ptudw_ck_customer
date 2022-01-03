@@ -5,6 +5,8 @@ const express = require("express");
 const createError = require("http-errors");
 const expressLayouts = require("express-ejs-layouts");
 const logger = require("morgan");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -14,6 +16,16 @@ app.use(logger("dev"));
 
 // Connect db
 require("./helpers/connections_mongodb").connect();
+
+app.use(
+  session({
+    secret: "epic-game",
+    maxAge: 60000,
+    saveUninitialized: true,
+    resave: true,
+  })
+);
+app.use(flash());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

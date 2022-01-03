@@ -201,6 +201,13 @@ ul {
   margin: 0 auto;
 }
 
+.mess-form {
+  width: 100%;
+  text-align: center;
+  color: #c70039;
+  font-size: 1.4rem;
+}
+
 .form .title {
   text-align: center;
   font-size: 2.4rem;

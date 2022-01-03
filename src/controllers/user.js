@@ -1,11 +1,69 @@
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const { userValidate } = require("../helpers/validation");
+const { accountVerify } = require("../helpers/send_mail");
+
 const getRegisterPage = async (req, res, next) => {
+  res.locals.message = req.flash("message");
   res.render("pages/register", {
     title: "Register",
   });
 };
 
 const register = async (req, res, next) => {
-  res.send("register");
+  try {
+    const { email, password, passwordC } = req.body;
+    const { error } = userValidate({ email, password });
+    let success = true;
+    // Validate
+    if (error) {
+      success = false;
+      const errMessage = error.details[0].message;
+      req.flash("message", errMessage);
+      res.redirect("/user/register");
+    }
+    const user = await User.findOne({ email });
+    if (user) {
+      success = false;
+      req.flash("message", "Email already exists");
+      res.redirect("/user/register");
+    }
+
+    // Comfirm password
+    if (password != passwordC) {
+      success = false;
+      req.flash("message", "Confirmed password is not correct");
+      res.redirect("/user/register");
+    }
+
+    if (success) {
+      const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+        expiresIn: 15 * 60,
+      });
+
+      // Saved user
+      const newUser = new User({ username: email, password });
+      const savedUser = await newUser.save();
+
+      // Send mail verify
+      const link = `${req.get("origin")}/user/verify/${token}`;
+      await accountVerify(email, link);
+
+      setTimeout(async () => {
+        try {
+          await User.findOneAndDelete({ username: email, is_lock: true });
+        } catch (error) {
+          next(error);
+        }
+      }, 15000 * 60);
+
+      req.flash("message", "Success");
+      res.redirect("/user/register");
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 };
 
 const login = async (req, res, next) => {
