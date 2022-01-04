@@ -78,6 +78,13 @@ const verifyEmail = async (req, res, next) => {
   }
 };
 
+const getLoginPage = async (req, res, next) => {
+  res.locals.message = req.flash("message");
+  res.render("pages/login", {
+    title: "Login",
+  });
+};
+
 const login = async (req, res, next) => {
   res.send("login");
 };
@@ -94,6 +101,7 @@ module.exports = {
   getRegisterPage,
   register,
   verifyEmail,
+  getLoginPage,
   login,
   refreshToken,
   accessToken,

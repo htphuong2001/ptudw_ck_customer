@@ -4,6 +4,7 @@ const {
   getRegisterPage,
   register,
   verifyEmail,
+  getLoginPage,
   login,
   refreshToken,
   accessToken,
@@ -16,6 +17,8 @@ router.get("/register", getRegisterPage);
 router.post("/register", register);
 
 router.get("/verify-email/:token", verifyEmail);
+
+router.get("/login", getLoginPage);
 
 router.post("/login", login);
 
