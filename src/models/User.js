@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { func } = require("joi");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -28,7 +29,11 @@ const UserSchema = new Schema({
   },
   is_lock: {
     type: Boolean,
-    default: true,
+    default: false,
+  },
+  is_verified: {
+    type: Boolean,
+    default: false,
   },
   createAt: {
     type: Date,
@@ -49,5 +54,13 @@ UserSchema.pre("save", async function (next) {
     next(error);
   }
 });
+
+UserSchema.methods.isCheckPassword = async function (password) {
+  try {
+    return await bcrypt.compare(password, this.password);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = mongoose.model("User", UserSchema);

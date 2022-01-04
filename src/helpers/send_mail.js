@@ -1,8 +1,7 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-const btnStyle =
-  "background: coral; padding: 8px 16px; color: #fff; text-decoration: none; line-height: 40px; height: 40px; display: inline-block;";
+const cssBtn = "text-decoration: none; margin-left: 20px";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -14,16 +13,22 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const accountVerify = async (emailrReceived, link) => {
+const accountVerify = async (emailrReceived, server, token) => {
   try {
+    const reqNo = `${server}/user/cancel-email/${token}`;
+    const reqYes = `${server}/user/verify-email/${token}`;
     await transporter.sendMail({
       from: `${process.env.MAIL_USER}`,
       to: `${emailrReceived}`,
       subject: "Account verify",
-      html: `<div><p>Please click the Verify button to activate the account</p> <a href="${link}" style="${btnStyle}">Verify</a></div>`,
+      html:
+        "<div>Did you just use this email to register an account on Epic-game ?" +
+        `<a style="color: #dc3545;${cssBtn}" href=${reqNo}> No,not me </a>` +
+        `<a style="color: #0d6efd;${cssBtn}"  href=${reqYes}> Yes, I did </a></div>`,
     });
   } catch (error) {
     console.log(error);
+    next(error);
   }
 };
 
