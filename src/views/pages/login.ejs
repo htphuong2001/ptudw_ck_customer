@@ -2,7 +2,7 @@
 <!-- Main -->
 <%- contentFor('body') %>
 <div class="container f">
-  <form class="form" action="/user/login" method="post">
+  <form class="form" action="/auth/login" method="post">
     <div class="title">Login</div>
     <div class="mess-form"><%= message %></div>
     <div class="form-field">
@@ -17,7 +17,7 @@
       <button type="submit">Login</button>
     </div>
     <div class="form-submit">
-      <a href="/">
+      <a href="/auth/facebook">
         <i class="bx bxl-facebook-square"></i>
         Login with Facebook
       </a>

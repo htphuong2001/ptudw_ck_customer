@@ -15,8 +15,8 @@ const transporter = nodemailer.createTransport({
 
 const accountVerify = async (emailrReceived, server, token) => {
   try {
-    const reqNo = `${server}/user/cancel-email/${token}`;
-    const reqYes = `${server}/user/verify-email/${token}`;
+    const reqNo = `${server}/auth/cancel-email/${token}`;
+    const reqYes = `${server}/auth/verify-email/${token}`;
     await transporter.sendMail({
       from: `${process.env.MAIL_USER}`,
       to: `${emailrReceived}`,

@@ -18,10 +18,7 @@ const UserSchema = new Schema({
     min: 6,
     default: null,
   },
-  firstname: {
-    type: String,
-  },
-  lastname: {
+  fullname: {
     type: String,
   },
   address: {
@@ -33,7 +30,7 @@ const UserSchema = new Schema({
   },
   is_verified: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   createAt: {
     type: Date,
@@ -47,9 +44,11 @@ const UserSchema = new Schema({
 
 UserSchema.pre("save", async function (next) {
   try {
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(this.password, salt);
-    this.password = hashPassword;
+    if (this.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(this.password, salt);
+      this.password = hashPassword;
+    }
   } catch (error) {
     next(error);
   }

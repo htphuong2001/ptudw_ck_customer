@@ -1,10 +1,16 @@
 const res = require("express/lib/response");
-const userRouter = require("./user");
-const { getHomePage } = require("../controllers/index");
+const authRouter = require("./auth");
+const {
+  getHomePage,
+  getRegisterPage,
+  getLoginPage,
+} = require("../controllers/index");
 
 const establish = (app) => {
   app.get("/", getHomePage);
-  app.use("/user", userRouter);
+  app.get("/register", getRegisterPage);
+  app.get("/login", getLoginPage);
+  app.use("/auth", authRouter);
 };
 
 module.exports = {
