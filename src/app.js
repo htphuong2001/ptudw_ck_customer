@@ -5,6 +5,7 @@ const express = require("express");
 const createError = require("http-errors");
 const expressLayouts = require("express-ejs-layouts");
 const logger = require("morgan");
+const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -21,10 +22,11 @@ require("./helpers/connections_mongodb").connect();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   session({
     secret: "epic-game",
-    cookie: { maxAge: 60 * 60 * 1000 },
+    maxAge: 60 * 60 * 1000,
     saveUninitialized: true,
     resave: true,
   })

@@ -68,10 +68,17 @@ module.exports = (passport) => {
             return done(null, false, errMessage);
           }
 
-          const user = User.findOne({ username: email });
-          if (!user) {
+          const user = await User.findOne({ username: email });
+          if (!user || !user.isCheckPassword()) {
             return done(null, false, "Wrong account or password");
           }
+
+          const { is_lock } = user;
+          if (is_lock) {
+            return done(null, false, "Your account has been locked");
+          }
+
+          return done(null, user, "Login success");
         } catch (err) {
           done(err);
         }

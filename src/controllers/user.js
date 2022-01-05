@@ -1,3 +1,4 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const passport = require("passport");
@@ -58,20 +59,36 @@ const getLoginPage = async (req, res, next) => {
   });
 };
 
-const login = (req, res, next) => {
-  console.log("login");
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      console.log(err);
-      next(err);
-    } else {
+const login = async (req, res, next) => {
+  try {
+    passport.authenticate("local.login", (err, user, info) => {
+      console.log("login");
+      if (err) next(err);
+
       if (!user) {
-        res.send(info);
+        req.flash("message", info);
+        res.redirect("/user/login");
       } else {
-        res.send(info);
+        const accessToken = jwt.sign(
+          { username: user.username },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "7d",
+          }
+        );
+        req.flash("message", info);
+        res.cookie(process.env.COOKIE_NAME_TOKEN, accessToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 120000,
+        });
+        res.redirect("/");
       }
-    }
-  })(req, res, next);
+    })(req, res, next);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 };
 
 const refreshToken = async (req, res, next) => {
